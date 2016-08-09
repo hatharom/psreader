@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<notes version="1">
+<labels>
+<label id="1" color="000000"></label>
+<label id="2" color="ffc425"></label>
+<label id="3" color="C46200"></label>
+<label id="4" color="FFC6FF"></label>
+<label id="5" color="#52d46a"></label>
+<label id="6" color="CC"></label>
+<label id="7" color="FFFFFF"></label>
+<label id="8" color="FFFF"></label>
+
+</labels>
+
+<note player="bob" label="1">scared player</note>   
+<note player="james" label="3">like to go allin</note>   
+<note player="john" label="8">tight player</note>   
+<note player="greta" label="2">bluffs a ton</note> 
+<note player="steven" label="1">seems ok</note>   
+<note player="pokerbot" label="7">scared player</note>   
+<note player="ilovepoker" label="4">scared player</note>   
+<note player="allinnn" label="2">very good player</note>   
+<note player="eric" label="3">pays off anything</note>   
+<note player="brad" label="2">bluffs a ton</note>   
+<note player="sarah" label="6">scared player</note>   
+
+
+</notes>
