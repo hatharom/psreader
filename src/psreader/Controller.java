@@ -13,8 +13,14 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TableCell;
+import javafx.scene.control.TableColumn;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
+import javafx.util.Callback;
 
 /**
  *
@@ -56,6 +62,26 @@ public class Controller {
 
             fxPlayerList.setItems(playerList);
 
+            Callback<TableColumn<Object, String>, TableCell<Object, String>> cellFactory
+                    = new Callback<TableColumn<Object, String>, TableCell<Object, String>>() {
+                        public TableCell call(TableColumn p) {
+                            TableCell cell = new TableCell<Object, String>() {
+                                @Override
+                                public void updateItem(String item, boolean empty) {
+                                    super.updateItem(item, empty);
+                                    setText(empty ? null : getString());
+                                    setStyle("-fx-background-color: black" );
+                                }
+
+                                private String getString() {
+                                    return getItem() == null ? "" : getItem().toString();
+                                }
+                            };
+
+                            return cell;
+                        }
+                    };
+            
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -66,14 +92,16 @@ public class Controller {
         Integer playerId = fxPlayerList.getSelectionModel().getSelectedIndex();
         NodeList nodeList = document.getElementsByTagName("note");
         Node playerNode = nodeList.item(playerId);
-        String playerName=(((Element)playerNode).getAttribute("player"));
-        String playerNotes=playerNode.getTextContent();
-       
-          NodeList colorList = document.getElementsByTagName("label");
-          int colorIndex=Integer.parseInt(((Element)playerNode).getAttribute("label"));
-          Node colorNode=colorList.item(colorIndex-1);
-          String color=(((Element)colorNode).getAttribute("color"));
-          playerLabel.setText(playerName+" : "+playerNotes+" color: "+color);
+        String playerName = (((Element) playerNode).getAttribute("player"));
+        String playerNotes = playerNode.getTextContent();
+
+        NodeList colorList = document.getElementsByTagName("label");
+        int colorIndex = Integer.parseInt(((Element) playerNode).getAttribute("label"));
+        Node colorNode = colorList.item(colorIndex - 1);
+        String color = (((Element) colorNode).getAttribute("color"));
+        playerLabel.setText(playerName + " : " + playerNotes + " color: " + color);
+        playerLabel.setStyle("-fx-background-color: " + color);
+
     }
 
 }

@@ -15,7 +15,7 @@
          </font>
       </Label>
       <Button fx:id="fxListBTN" layoutX="88.0" layoutY="60.0" mnemonicParsing="false" onAction="#print" prefHeight="25.0" prefWidth="95.0" text="list notes!" />
-      <ListView fx:id="fxPlayerList" layoutX="36.0" layoutY="119.0" onMouseClicked="#listenToSelection" prefHeight="200.0" prefWidth="200.0" />
-      <Label fx:id="playerLabel" layoutX="283.0" layoutY="127.0" onMouseClicked="#listenToSelection" prefHeight="165.0" prefWidth="281.0" text="default" />
+      <ListView fx:id="fxPlayerList" layoutX="36.0" layoutY="119.0" onMouseClicked="#listenToSelection" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: ;" stylesheets="@style.css" />
+      <Label fx:id="playerLabel" alignment="TOP_LEFT" layoutX="283.0" layoutY="127.0" onMouseClicked="#listenToSelection" prefHeight="61.0" prefWidth="273.0" text="choose a player!" />
    </children>
 </AnchorPane>
