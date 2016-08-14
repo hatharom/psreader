@@ -1,3 +1,5 @@
 .list-cell:selected{
-    -fx-background-color: chocolate;
+ 
+	-fx-border-color: black;
+-fx-text-fill: black;
 }

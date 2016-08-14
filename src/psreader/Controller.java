@@ -37,54 +37,59 @@ public class Controller {
     DocumentBuilder builder;
     Document document;
     File file;
+    NodeList nodeList;
+    public static int counter = 2;
 
     @FXML
     public void print() {
-        /*   ObservableList playerList
-         = FXCollections.observableArrayList();*/
+        fxPlayerList.getItems().clear();
         ObservableList playerList
                 = fxPlayerList.getItems();
         try {
-            //   fxPlayerList=new ListView(playerList);
+
             System.out.println("");
             file = new File("notes.xml");
             factory = DocumentBuilderFactory.newInstance();
             builder = factory.newDocumentBuilder();
             document = builder.parse(file);
             document.getDocumentElement().normalize();
-            NodeList nodeList = document.getElementsByTagName("note");
+            nodeList = document.getElementsByTagName("note");
 
             for (int i = 0; i < nodeList.getLength(); i++) {
                 Node actualNode = nodeList.item(i);
+
                 playerList.add(((Element) actualNode).getAttribute("player"));
 
             }
-
+            setCellBackground();
             fxPlayerList.setItems(playerList);
 
-            Callback<TableColumn<Object, String>, TableCell<Object, String>> cellFactory
-                    = new Callback<TableColumn<Object, String>, TableCell<Object, String>>() {
-                        public TableCell call(TableColumn p) {
-                            TableCell cell = new TableCell<Object, String>() {
-                                @Override
-                                public void updateItem(String item, boolean empty) {
-                                    super.updateItem(item, empty);
-                                    setText(empty ? null : getString());
-                                    setStyle("-fx-background-color: black" );
-                                }
-
-                                private String getString() {
-                                    return getItem() == null ? "" : getItem().toString();
-                                }
-                            };
-
-                            return cell;
-                        }
-                    };
-            
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+    }
+
+    public void setCellBackground() {
+        fxPlayerList.setCellFactory(new Callback<ListView<String>, ListCell<String>>() {
+
+            @Override
+            public ListCell<String> call(ListView<String> param) {
+                ListCell<String> cell = new ListCell<String>() {
+
+                    @Override
+                    protected void updateItem(String item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if(item!=null){
+                        String color = getColor(item);
+                           setStyle("-fx-background-color: "+color);
+                            setText(item);}
+                                       
+                    }
+                };
+                return cell;
+            }
+        });
     }
 
     @FXML
@@ -102,6 +107,23 @@ public class Controller {
         playerLabel.setText(playerName + " : " + playerNotes + " color: " + color);
         playerLabel.setStyle("-fx-background-color: " + color);
 
+    }
+
+    public String getColor(String player) {
+        System.out.println(player);
+        String color = null;
+        Node playerNode = null;
+        int actualIndex = 0;
+        playerNode = nodeList.item(actualIndex);
+        while (!(((Element) playerNode).getAttribute("player")).equalsIgnoreCase(player)) {
+            playerNode = nodeList.item(actualIndex);
+            actualIndex++;
+        }
+        NodeList colorList = document.getElementsByTagName("label");
+        int colorIndex = Integer.parseInt(((Element) playerNode).getAttribute("label"));
+        Node colorNode = colorList.item(colorIndex - 1);
+        color = (((Element) colorNode).getAttribute("color"));
+        return color;
     }
 
 }
