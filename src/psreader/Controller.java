@@ -9,6 +9,8 @@ import javafx.fxml.FXML;
 import org.w3c.dom.*;
 import javax.xml.parsers.*;
 import java.io.*;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -17,6 +19,7 @@ import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -32,19 +35,20 @@ public class Controller {
     ListView fxPlayerList;
     @FXML
     Label playerLabel;
-
+    @FXML
+    TextField fxSearchBox;
     DocumentBuilderFactory factory;
     DocumentBuilder builder;
     Document document;
     File file;
     NodeList nodeList;
-    public static int counter = 2;
+    String filterValue;
+    public static int counter = 0;
 
     @FXML
     public void print() {
         fxPlayerList.getItems().clear();
-        ObservableList playerList
-                = fxPlayerList.getItems();
+        ObservableList playerList = fxPlayerList.getItems();
         try {
 
             System.out.println("");
@@ -57,8 +61,13 @@ public class Controller {
 
             for (int i = 0; i < nodeList.getLength(); i++) {
                 Node actualNode = nodeList.item(i);
-
-                playerList.add(((Element) actualNode).getAttribute("player"));
+                if (filterValue != null) {
+                    if (((Element) actualNode).getAttribute("player").contains(filterValue)) {
+                        playerList.add(((Element) actualNode).getAttribute("player"));
+                    }
+                } else {
+                    playerList.add(((Element) actualNode).getAttribute("player"));
+                }
 
             }
             setCellBackground();
@@ -80,11 +89,12 @@ public class Controller {
                     @Override
                     protected void updateItem(String item, boolean empty) {
                         super.updateItem(item, empty);
-                        if(item!=null){
-                        String color = getColor(item);
-                           setStyle("-fx-background-color: "+color);
-                            setText(item);}
-                                       
+                        if (item != null) {
+                            String color = getColor(item);
+                            setStyle("-fx-background-color: " + color);
+                            setText(item);
+                        }
+
                     }
                 };
                 return cell;
@@ -104,13 +114,12 @@ public class Controller {
         int colorIndex = Integer.parseInt(((Element) playerNode).getAttribute("label"));
         Node colorNode = colorList.item(colorIndex - 1);
         String color = (((Element) colorNode).getAttribute("color"));
-        playerLabel.setText(playerName + " : " + playerNotes + " color: " + color);
+        playerLabel.setText(playerName + " : " + playerNotes);
         playerLabel.setStyle("-fx-background-color: " + color);
 
     }
 
     public String getColor(String player) {
-        System.out.println(player);
         String color = null;
         Node playerNode = null;
         int actualIndex = 0;
@@ -124,6 +133,12 @@ public class Controller {
         Node colorNode = colorList.item(colorIndex - 1);
         color = (((Element) colorNode).getAttribute("color"));
         return color;
+    }
+
+    @FXML
+    public void search() {
+        filterValue = fxSearchBox.getText();
+        print();
     }
 
 }
