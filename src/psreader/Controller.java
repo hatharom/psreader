@@ -44,7 +44,10 @@ public class Controller {
     NodeList nodeList;
     String filterValue;
     public static int counter = 0;
-
+ 
+    /*
+    *populates the list, both filtered and unfiltered
+    */
     @FXML
     public void print() {
         fxPlayerList.getItems().clear();
@@ -60,19 +63,27 @@ public class Controller {
             nodeList = document.getElementsByTagName("note");
 
             for (int i = 0; i < nodeList.getLength(); i++) {
+                
+                //fetching data from xml and creates player object for that
                 Node actualNode = nodeList.item(i);
+                NodeList colorList = document.getElementsByTagName("label");
+                int colorIndex = Integer.parseInt(((Element) actualNode).getAttribute("label"));
+                Node colorNode = colorList.item(colorIndex - 1);
+                String color = (((Element) colorNode).getAttribute("color"));
+                Player player = new Player(((Element) actualNode).getAttribute("player"), actualNode.getTextContent(), color);
+                
+                //decides whether filterrule is applied and add the players to the list accordingly
                 if (filterValue != null) {
-                    if (((Element) actualNode).getAttribute("player").contains(filterValue)) {
-                        playerList.add(((Element) actualNode).getAttribute("player"));
+                    if (((Element) actualNode).getAttribute("player").startsWith(filterValue)) {
+                        playerList.add(player);
                     }
                 } else {
-                    playerList.add(((Element) actualNode).getAttribute("player"));
+                    playerList.add(player);
                 }
-
             }
+            
             setCellBackground();
             fxPlayerList.setItems(playerList);
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -80,19 +91,19 @@ public class Controller {
     }
 
     public void setCellBackground() {
-        fxPlayerList.setCellFactory(new Callback<ListView<String>, ListCell<String>>() {
+        fxPlayerList.setCellFactory(new Callback<ListView<Player>, ListCell<Player>>() {
 
             @Override
-            public ListCell<String> call(ListView<String> param) {
-                ListCell<String> cell = new ListCell<String>() {
+            public ListCell<Player> call(ListView<Player> param) {
+                ListCell<Player> cell = new ListCell<Player>() {
 
                     @Override
-                    protected void updateItem(String item, boolean empty) {
+                    protected void updateItem(Player item, boolean empty) {
                         super.updateItem(item, empty);
                         if (item != null) {
-                            String color = getColor(item);
+                            String color = item.getColor();
                             setStyle("-fx-background-color: " + color);
-                            setText(item);
+                            setText(item.toString());
                         }
 
                     }
@@ -104,35 +115,12 @@ public class Controller {
 
     @FXML
     public void listenToSelection(MouseEvent event) {
-        Integer playerId = fxPlayerList.getSelectionModel().getSelectedIndex();
-        NodeList nodeList = document.getElementsByTagName("note");
-        Node playerNode = nodeList.item(playerId);
-        String playerName = (((Element) playerNode).getAttribute("player"));
-        String playerNotes = playerNode.getTextContent();
-
-        NodeList colorList = document.getElementsByTagName("label");
-        int colorIndex = Integer.parseInt(((Element) playerNode).getAttribute("label"));
-        Node colorNode = colorList.item(colorIndex - 1);
-        String color = (((Element) colorNode).getAttribute("color"));
-        playerLabel.setText(playerName + " : " + playerNotes);
-        playerLabel.setStyle("-fx-background-color: " + color);
-
-    }
-
-    public String getColor(String player) {
-        String color = null;
-        Node playerNode = null;
-        int actualIndex = 0;
-        playerNode = nodeList.item(actualIndex);
-        while (!(((Element) playerNode).getAttribute("player")).equalsIgnoreCase(player)) {
-            playerNode = nodeList.item(actualIndex);
-            actualIndex++;
+        
+        Player selectedPlayer = ((Player) fxPlayerList.getSelectionModel().getSelectedItem());
+        if(selectedPlayer!=null){
+        playerLabel.setText(selectedPlayer.getNotes());
+        playerLabel.setStyle("-fx-background-color: " + selectedPlayer.getColor());
         }
-        NodeList colorList = document.getElementsByTagName("label");
-        int colorIndex = Integer.parseInt(((Element) playerNode).getAttribute("label"));
-        Node colorNode = colorList.item(colorIndex - 1);
-        color = (((Element) colorNode).getAttribute("color"));
-        return color;
     }
 
     @FXML

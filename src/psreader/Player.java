@@ -5,11 +5,13 @@
  */
 package psreader;
 
+import java.io.Serializable;
+
 /**
  *
  * @author zolih
  */
-public class Player {
+public class Player implements Serializable {
 
     private String playerName;
     private String notes;
@@ -44,5 +46,11 @@ public class Player {
     public void setColor(String color) {
         this.color = color;
     }
-
+    
+    
+    
+    @Override
+    public String toString(){
+        return this.playerName;
+    }
 }
