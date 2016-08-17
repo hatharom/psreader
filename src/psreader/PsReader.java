@@ -13,6 +13,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.StackPane;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 /**
@@ -24,7 +25,8 @@ public class PsReader extends Application {
     @Override
    public void start(Stage primaryStage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("Gui.fxml"));
-        Scene scene = new Scene(root);    
+        Scene scene = new Scene(root);   
+        Controller.setStage(primaryStage);
         primaryStage.setScene(scene);
 
         primaryStage.show();

@@ -14,10 +14,11 @@
             <Font name="Arial Bold" size="21.0" />
          </font>
       </Label>
-      <Button fx:id="fxListBTN" layoutX="89.0" layoutY="334.0" mnemonicParsing="false" onAction="#print" prefHeight="25.0" prefWidth="95.0" text="list notes!" />
+      <Button fx:id="fxListBTN" layoutX="36.0" layoutY="335.0" mnemonicParsing="false" onAction="#print" prefHeight="25.0" prefWidth="95.0" text="list notes!" />
       <ListView fx:id="fxPlayerList" layoutX="36.0" layoutY="119.0" onMouseClicked="#listenToSelection" prefHeight="200.0" prefWidth="200.0" stylesheets="@style.css" />
-      <Label fx:id="playerLabel" alignment="TOP_LEFT" layoutX="283.0" layoutY="127.0" onMouseClicked="#listenToSelection" prefHeight="61.0" prefWidth="273.0" text="choose a player!" />
+      <Label fx:id="playerLabel" alignment="TOP_LEFT" layoutX="283.0" layoutY="127.0" onMouseClicked="#listenToSelection" prefHeight="186.0" prefWidth="274.0" text="choose a player!" />
       <TextField fx:id="fxSearchBox" layoutX="102.0" layoutY="81.0" onKeyReleased="#search" prefHeight="25.0" prefWidth="134.0" />
       <Label layoutX="36.0" layoutY="85.0" prefHeight="14.0" prefWidth="58.0" text="search :" />
+      <Button fx:id="fxFile" layoutX="143.0" layoutY="335.0" mnemonicParsing="false" onAction="#chooseFile" prefHeight="25.0" prefWidth="89.0" text="set file..." />
    </children>
 </AnchorPane>

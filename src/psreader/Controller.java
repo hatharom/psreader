@@ -23,7 +23,10 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import javafx.util.Callback;
+import javax.swing.JFileChooser;
 
 /**
  *
@@ -40,14 +43,17 @@ public class Controller {
     DocumentBuilderFactory factory;
     DocumentBuilder builder;
     Document document;
-    File file;
+    File file = new File("notes.xml");
+    ;
     NodeList nodeList;
     String filterValue;
+    private static Stage primaryStage;
+
     public static int counter = 0;
- 
+
     /*
-    *populates the list, both filtered and unfiltered
-    */
+     *populates the list, both filtered and unfiltered
+     */
     @FXML
     public void print() {
         fxPlayerList.getItems().clear();
@@ -55,7 +61,7 @@ public class Controller {
         try {
 
             System.out.println("");
-            file = new File("notes.xml");
+
             factory = DocumentBuilderFactory.newInstance();
             builder = factory.newDocumentBuilder();
             document = builder.parse(file);
@@ -63,25 +69,28 @@ public class Controller {
             nodeList = document.getElementsByTagName("note");
 
             for (int i = 0; i < nodeList.getLength(); i++) {
-                
+
                 //fetching data from xml and creates player object for that
                 Node actualNode = nodeList.item(i);
                 NodeList colorList = document.getElementsByTagName("label");
                 int colorIndex = Integer.parseInt(((Element) actualNode).getAttribute("label"));
                 Node colorNode = colorList.item(colorIndex - 1);
-                String color = (((Element) colorNode).getAttribute("color"));
+                String color ="#" +(((Element) colorNode).getAttribute("color"));                
+                if (color.length() < 6) {
+                    color = completeColor(color);
+                }
                 Player player = new Player(((Element) actualNode).getAttribute("player"), actualNode.getTextContent(), color);
-                
+
                 //decides whether filterrule is applied and add the players to the list accordingly
                 if (filterValue != null) {
-                    if (((Element) actualNode).getAttribute("player").startsWith(filterValue)) {
+                    if (((Element) actualNode).getAttribute("player").toLowerCase().startsWith(filterValue.toLowerCase())) {
                         playerList.add(player);
                     }
                 } else {
                     playerList.add(player);
                 }
             }
-            
+
             setCellBackground();
             fxPlayerList.setItems(playerList);
         } catch (Exception e) {
@@ -105,7 +114,6 @@ public class Controller {
                             setStyle("-fx-background-color: " + color);
                             setText(item.toString());
                         }
-
                     }
                 };
                 return cell;
@@ -115,11 +123,11 @@ public class Controller {
 
     @FXML
     public void listenToSelection(MouseEvent event) {
-        
+
         Player selectedPlayer = ((Player) fxPlayerList.getSelectionModel().getSelectedItem());
-        if(selectedPlayer!=null){
-        playerLabel.setText(selectedPlayer.getNotes());
-        playerLabel.setStyle("-fx-background-color: " + selectedPlayer.getColor());
+        if (selectedPlayer != null) {
+            playerLabel.setText(selectedPlayer.getPlayerName()+"\n---------------\n"+selectedPlayer.getNotes());
+            playerLabel.setStyle("-fx-background-color: " + selectedPlayer.getColor());
         }
     }
 
@@ -127,6 +135,27 @@ public class Controller {
     public void search() {
         filterValue = fxSearchBox.getText();
         print();
+    }
+
+    @FXML
+    public void chooseFile() {
+        JFileChooser fc = new JFileChooser();
+        fc.showOpenDialog(null);
+        file = fc.getSelectedFile();
+
+    }
+
+    public static void setStage(Stage stage) {
+        primaryStage = stage;
+    }
+
+    private String completeColor(String color) {
+        StringBuilder sb=new StringBuilder(color);
+       int start=color.length();
+        for (int i = start; i < 7; i++) {
+            sb.append("0");
+        }
+        return sb.toString();
     }
 
 }
